@@ -20,17 +20,18 @@
             require_once('connexion.php');
             $mel = $_REQUEST['mel'];
             $motdepasse = $_REQUEST['motdepasse'];
-            
+
             $stmt = $connexion->prepare("SELECT * FROM client WHERE mel=:mel AND motdepasse=:motdepasse");
             $stmt->bindValue(':mel', $mel, PDO::PARAM_STR);
             $stmt->bindValue(':motdepasse', $motdepasse, PDO::PARAM_STR);
             $stmt->setFetchMode(PDO::FETCH_OBJ);
             $stmt->execute();
-            $enregistrement = $stmt->fetch();
-        if(!$enregistrement){
+            $_SESSION['client'] = $stmt->fetch();
+        if(!$_SESSION['client']){
             echo 'Mel ou mot de passe incorrect';
-        } elseif($enregistrement) {
-                    echo 'Bienvenue ' .$mel.'';   
+        } elseif($_SESSION['client']) {
+            echo 'Bienvenue ' .$_SESSION['client']->nom.' '.$_SESSION['client']->prenom.'';
+            echo '<input type="button" name="deco" value="Déconnexion"></input>';   
         }
     }
 ?>
